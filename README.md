@@ -1,3 +1,11 @@
+#### Setup
+
+```bash
+yarn
+# or
+npm install
+```
+
 #### Development
 
 ```bash
