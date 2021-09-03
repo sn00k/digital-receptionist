@@ -7,6 +7,7 @@ import styles from "../styles/Home.module.css";
 import Card from "../components/Card";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
+import Logo from "../components/Logo";
 
 const mainContent: { [key: string]: any } = {
   en: {
@@ -76,12 +77,29 @@ const Home: NextPage = () => {
       <div className={styles.container}>
         {start ? (
           <Card>
+            <Logo />
             <h3>{form.title}</h3>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <input {...register("firstname")} placeholder={form.firstName} />
-              <input {...register("lastname")} placeholder={form.lastName} />
-              <input {...register("email")} placeholder={form.email} />
-              <input {...register("company")} placeholder={form.company} />
+              <input
+                {...register("firstname")}
+                type="text"
+                placeholder={form.firstName}
+              />
+              <input
+                {...register("lastname")}
+                type="text"
+                placeholder={form.lastName}
+              />
+              <input
+                {...register("email")}
+                type="email"
+                placeholder={form.email}
+              />
+              <input
+                {...register("company")}
+                type="text"
+                placeholder={form.company}
+              />
               <button className={styles.formButton} type="submit">
                 {form.submit}
               </button>
@@ -89,6 +107,9 @@ const Home: NextPage = () => {
           </Card>
         ) : (
           <Card>
+            <div>
+              <Logo />
+            </div>
             <div className={styles.flags}>
               <Link passHref href={asPath} locale="en">
                 <div

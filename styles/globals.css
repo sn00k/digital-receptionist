@@ -14,3 +14,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+:root {
+  --capgemini-color--primary: rgba(18, 171, 219);
+  --capgemini-color--secondary: rgba(0, 112, 173);
+}
