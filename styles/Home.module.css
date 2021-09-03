@@ -6,3 +6,36 @@
   height: 100vh;
   background-color: rgba(18, 171, 219);
 }
+
+.container .flags {
+  display: flex;
+  justify-content: center;
+}
+
+.container .sweFlag,
+.container .usFlag {
+  margin: 0 1rem;
+  cursor: pointer;
+}
+
+.activeLocale {
+  border-bottom: 3px solid rgba(18, 171, 219);
+}
+
+.container button {
+  margin-left: 0.5rem;
+  background-color: lightgreen;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  align-self: center;
+}
+
+.container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.container form input {
+  padding: 0.5rem;
+  margin: 1rem;
+}
