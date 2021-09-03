@@ -5,10 +5,11 @@ import Image from "next/image";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Card from "../components/Card";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import Logo from "../components/Logo";
 import { textContent } from "../utils/sv_us";
+import FormInput from "../components/FormInput";
 
 const employees: object[] = [
   {
@@ -23,20 +24,29 @@ const employees: object[] = [
   },
 ];
 
+type IFormInputTypes = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  company: string;
+};
+
 const Home: NextPage = () => {
   const { locale, locales, defaultLocale, asPath } = useRouter();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInputTypes>({ mode: "onBlur" });
   const [start, setStart] = useState(false);
   if (!locale) {
     return null;
   }
 
-  console.log("textContent: ", textContent);
   const { landingTitle, greeting, startButton, form } = textContent[locale];
 
-  const onSubmit = (data: any) => {
-    console.log("data: ", data);
-  };
+  const onSubmit: SubmitHandler<IFormInputTypes> = (data) => console.log(data);
+
   return (
     <>
       <Head>
@@ -79,25 +89,49 @@ const Home: NextPage = () => {
             <>
               <h3>{form.title}</h3>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <input
-                  {...register("firstname")}
-                  type="text"
-                  placeholder={form.firstName}
+                <FormInput
+                  inputType="firstName"
+                  locale={locale}
+                  register={register}
+                  errors={errors}
+                  validation={{
+                    required: true,
+                    minLength: 2,
+                    maxLength: 50,
+                  }}
                 />
-                <input
-                  {...register("lastname")}
-                  type="text"
-                  placeholder={form.lastName}
+                <FormInput
+                  inputType="lastName"
+                  locale={locale}
+                  register={register}
+                  errors={errors}
+                  validation={{
+                    required: true,
+                    minLength: 2,
+                    maxLength: 50,
+                  }}
                 />
-                <input
-                  {...register("email")}
-                  type="email"
-                  placeholder={form.email}
+                <FormInput
+                  inputType="email"
+                  locale={locale}
+                  register={register}
+                  errors={errors}
+                  validation={{
+                    required: true,
+                    minLength: 6,
+                    maxLength: 70,
+                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  }}
                 />
-                <input
-                  {...register("company")}
-                  type="text"
-                  placeholder={form.company}
+                <FormInput
+                  inputType="company"
+                  locale={locale}
+                  register={register}
+                  errors={errors}
+                  validation={{
+                    minLength: 2,
+                    maxLength: 70,
+                  }}
                 />
                 <button className={styles.formButton} type="submit">
                   {form.submit}

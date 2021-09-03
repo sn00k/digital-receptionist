@@ -10,6 +10,12 @@ export const textContent: { [key: string]: any } = {
       email: "Email",
       company: "Company",
       submit: "Send",
+      validation: {
+        minLength: "is too short",
+        maxLength: "is too long",
+        required: "is required",
+        pattern: "is invalid",
+      },
     },
   },
   sv: {
@@ -23,6 +29,12 @@ export const textContent: { [key: string]: any } = {
       email: "Epost",
       company: "Företag",
       submit: "Skicka",
+      validation: {
+        minLength: "är för kort",
+        maxLength: "är för långt",
+        required: "är obligatoriskt",
+        pattern: "är ogiltlig",
+      },
     },
   },
 };
