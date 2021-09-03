@@ -48,72 +48,74 @@ const Home: NextPage = () => {
         />
       </Head>
       <div className={styles.container}>
-        {start ? (
-          <Card>
-            <Logo />
-            <h3>{form.title}</h3>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <input
-                {...register("firstname")}
-                type="text"
-                placeholder={form.firstName}
-              />
-              <input
-                {...register("lastname")}
-                type="text"
-                placeholder={form.lastName}
-              />
-              <input
-                {...register("email")}
-                type="email"
-                placeholder={form.email}
-              />
-              <input
-                {...register("company")}
-                type="text"
-                placeholder={form.company}
-              />
-              <button className={styles.formButton} type="submit">
-                {form.submit}
+        <Card>
+          <Logo />
+          <div className={styles.flags}>
+            <Link passHref href={asPath} locale="en">
+              <div
+                className={`${styles.usFlag} ${
+                  locale === "en" ? styles.activeLocale : ""
+                }`}
+              >
+                <Image src="/us.svg" width="33" height="33" alt="US flag" />
+              </div>
+            </Link>
+            <Link passHref href={asPath} locale="sv">
+              <div
+                className={`${styles.sweFlag} ${
+                  locale === "sv" ? styles.activeLocale : ""
+                }`}
+              >
+                <Image
+                  src="/se.svg"
+                  width="33"
+                  height="33"
+                  alt="Swedish flag"
+                />
+              </div>
+            </Link>
+          </div>
+          {start ? (
+            <>
+              <h3>{form.title}</h3>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <input
+                  {...register("firstname")}
+                  type="text"
+                  placeholder={form.firstName}
+                />
+                <input
+                  {...register("lastname")}
+                  type="text"
+                  placeholder={form.lastName}
+                />
+                <input
+                  {...register("email")}
+                  type="email"
+                  placeholder={form.email}
+                />
+                <input
+                  {...register("company")}
+                  type="text"
+                  placeholder={form.company}
+                />
+                <button className={styles.formButton} type="submit">
+                  {form.submit}
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <h2>{greeting}</h2>
+              <button
+                className={styles.btnStart}
+                onClick={() => setStart(true)}
+              >
+                {startButton}
               </button>
-            </form>
-          </Card>
-        ) : (
-          <Card>
-            <div>
-              <Logo />
-            </div>
-            <div className={styles.flags}>
-              <Link passHref href={asPath} locale="en">
-                <div
-                  className={`${styles.usFlag} ${
-                    locale === "en" ? styles.activeLocale : ""
-                  }`}
-                >
-                  <Image src="/us.svg" width="33" height="33" alt="US flag" />
-                </div>
-              </Link>
-              <Link passHref href={asPath} locale="sv">
-                <div
-                  className={`${styles.sweFlag} ${
-                    locale === "sv" ? styles.activeLocale : ""
-                  }`}
-                >
-                  <Image
-                    src="/se.svg"
-                    width="33"
-                    height="33"
-                    alt="Swedish flag"
-                  />
-                </div>
-              </Link>
-            </div>
-            <h2>{greeting}</h2>
-            <button className={styles.btnStart} onClick={() => setStart(true)}>
-              {startButton}
-            </button>
-          </Card>
-        )}
+            </>
+          )}
+        </Card>
       </div>
     </>
   );
