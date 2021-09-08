@@ -52,7 +52,8 @@ export default function Home({
     return null;
   }
 
-  const { landingTitle, greeting, startButton, form } = textContent[locale];
+  const { landingTitle, greeting, startButton, form, nextStepTitle } =
+    textContent[locale];
 
   const onSubmit: SubmitHandler<IFormInputTypes> = (data) => {
     const { firstName, lastName, email, company } = data;
@@ -203,7 +204,7 @@ export default function Home({
           )}
           {nextStep && (
             <>
-              <h2>APPOINTMENT WITH WHO (todo i18n)?</h2>
+              <h2>{nextStepTitle}</h2>
               <ReactSearchAutocomplete
                 items={employeeObjs}
                 onSearch={handleOnSearch}

@@ -17,6 +17,7 @@ export const textContent: { [key: string]: any } = {
         pattern: "is invalid",
       },
     },
+    nextStepTitle: "Who did you book an appointment with?",
   },
   sv: {
     landingTitle: "Digital Receptionist",
@@ -36,5 +37,6 @@ export const textContent: { [key: string]: any } = {
         pattern: "är ogiltlig",
       },
     },
+    nextStepTitle: "Vem har du bokat tid med?",
   },
 };
