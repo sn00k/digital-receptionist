@@ -41,7 +41,8 @@
 }
 
 .container button:disabled {
-  cursor: default;
+  background-color: darkgray;
+  cursor: not-allowed;
 }
 
 .container button:focus {

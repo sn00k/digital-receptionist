@@ -18,6 +18,8 @@ export const textContent: { [key: string]: any } = {
       },
     },
     nextStepTitle: "Who did you book an appointment with?",
+    notifyButton: "Notify",
+    searchPlaceholder: "Start typing a name...",
   },
   sv: {
     landingTitle: "Digital Receptionist",
@@ -38,5 +40,7 @@ export const textContent: { [key: string]: any } = {
       },
     },
     nextStepTitle: "Vem har du bokat tid med?",
+    notifyButton: "Meddela",
+    searchPlaceholder: "Börja skriva ett namn...",
   },
 };

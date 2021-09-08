@@ -47,13 +47,21 @@ export default function Home({
   const [start, setStart] = useState(false);
   const [contactInfo, setContactInfo] = useState({});
   const [nextStep, setNextStep] = useState(false);
+  const [showNotifyBtn, setShowNotifyBtn] = useState(false);
 
   if (!locale) {
     return null;
   }
 
-  const { landingTitle, greeting, startButton, form, nextStepTitle } =
-    textContent[locale];
+  const {
+    landingTitle,
+    greeting,
+    startButton,
+    form,
+    nextStepTitle,
+    notifyButton,
+    searchPlaceholder,
+  } = textContent[locale];
 
   const onSubmit: SubmitHandler<IFormInputTypes> = (data) => {
     const { firstName, lastName, email, company } = data;
@@ -70,6 +78,7 @@ export default function Home({
     // onSearch will have as the first callback parameter
     // the string searched and for the second the results.
     console.log(input, results);
+    setShowNotifyBtn(false);
   };
 
   const handleOnHover = (result: object) => {
@@ -82,6 +91,7 @@ export default function Home({
     // the item selected
     console.log("Selected");
     console.log(item);
+    setShowNotifyBtn(true);
   };
 
   const handleOnFocus = () => {
@@ -213,9 +223,12 @@ export default function Home({
                 onHover={handleOnHover}
                 onSelect={handleOnSelect}
                 onFocus={handleOnFocus}
+                onClear={() => setShowNotifyBtn(false)}
                 maxResults={3}
-                inputDebounce={1000}
+                inputDebounce={500}
+                placeholder={searchPlaceholder}
               />
+              <button disabled={!showNotifyBtn}>{notifyButton}</button>
             </>
           )}
         </Card>
