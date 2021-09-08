@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Image from "next/image";
@@ -10,19 +10,22 @@ import Link from "next/link";
 import Logo from "../components/Logo";
 import { textContent } from "../utils/sv_us";
 import FormInput from "../components/FormInput";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import { getOrCreateConnection } from "../utils/db";
+import { Employee } from "../models/Employee";
 
-const employees: object[] = [
-  {
-    firstName: "Robin",
-    lastName: "Nilsson",
-    email: "robin.nilsson@capgemini.com",
-  },
-  {
-    firstName: "Tanja",
-    lastName: "Georgsson",
-    email: "tanja.georgsson@capgemini.com",
-  },
-];
+export async function getServerSideProps() {
+  const conn = await getOrCreateConnection();
+  const employeeRepo = conn.getRepository<Employee>("Employee");
+
+  const employees = await (
+    await employeeRepo.find()
+  ).map((e) => JSON.stringify(e));
+
+  return {
+    props: { employees },
+  };
+}
 
 type IFormInputTypes = {
   firstName: string;
@@ -31,21 +34,69 @@ type IFormInputTypes = {
   company: string;
 };
 
-const Home: NextPage = () => {
-  const { locale, locales, defaultLocale, asPath } = useRouter();
+export default function Home({
+  employees,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInputTypes>({ mode: "onBlur" });
+  const { locale, locales, defaultLocale, asPath } = useRouter();
+  const employeeObjs = employees.map((e) => JSON.parse(e) as Employee);
   const [start, setStart] = useState(false);
+  const [contactInfo, setContactInfo] = useState({});
+  const [nextStep, setNextStep] = useState(false);
+
   if (!locale) {
     return null;
   }
 
   const { landingTitle, greeting, startButton, form } = textContent[locale];
 
-  const onSubmit: SubmitHandler<IFormInputTypes> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<IFormInputTypes> = (data) => {
+    const { firstName, lastName, email, company } = data;
+    setContactInfo({
+      firstName,
+      lastName,
+      email,
+      company,
+    });
+    setNextStep(true);
+  };
+
+  const handleOnSearch = (input: string, results: object[]) => {
+    // onSearch will have as the first callback parameter
+    // the string searched and for the second the results.
+    console.log(input, results);
+  };
+
+  const handleOnHover = (result: object) => {
+    // the item hovered
+    console.log("Hovered");
+    console.log(result);
+  };
+
+  const handleOnSelect = (item: object) => {
+    // the item selected
+    console.log("Selected");
+    console.log(item);
+  };
+
+  const handleOnFocus = () => {
+    console.log("Focused");
+  };
+
+  const formatResult = (item: string) => {
+    console.log("item: ", item);
+    return (
+      <p
+        dangerouslySetInnerHTML={{
+          __html: '<strong className="search-result">' + item + "</strong>",
+        }}
+      ></p>
+    );
+  };
 
   return (
     <>
@@ -85,7 +136,7 @@ const Home: NextPage = () => {
               </div>
             </Link>
           </div>
-          {start ? (
+          {start && !nextStep && (
             <>
               <h3>{form.title}</h3>
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -134,11 +185,12 @@ const Home: NextPage = () => {
                   }}
                 />
                 <button className={styles.formButton} type="submit">
-                  {form.submit}
+                  {form.nextStep}
                 </button>
               </form>
             </>
-          ) : (
+          )}
+          {!start && !nextStep && (
             <>
               <h2>{greeting}</h2>
               <button
@@ -149,10 +201,24 @@ const Home: NextPage = () => {
               </button>
             </>
           )}
+          {nextStep && (
+            <>
+              <h2>APPOINTMENT WITH WHO (todo i18n)?</h2>
+              <ReactSearchAutocomplete
+                items={employeeObjs}
+                onSearch={handleOnSearch}
+                autoFocus
+                formatResult={formatResult}
+                onHover={handleOnHover}
+                onSelect={handleOnSelect}
+                onFocus={handleOnFocus}
+                maxResults={3}
+                inputDebounce={1000}
+              />
+            </>
+          )}
         </Card>
       </div>
     </>
   );
-};
-
-export default Home;
+}

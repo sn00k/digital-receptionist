@@ -9,7 +9,7 @@ export const textContent: { [key: string]: any } = {
       lastName: "Last name",
       email: "Email",
       company: "Company",
-      submit: "Send",
+      nextStep: "Next",
       validation: {
         minLength: "is too short",
         maxLength: "is too long",
@@ -28,7 +28,7 @@ export const textContent: { [key: string]: any } = {
       lastName: "Efternamn",
       email: "Epost",
       company: "Företag",
-      submit: "Skicka",
+      nextStep: "Nästa",
       validation: {
         minLength: "är för kort",
         maxLength: "är för långt",
