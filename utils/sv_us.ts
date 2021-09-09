@@ -20,6 +20,7 @@ export const textContent: { [key: string]: any } = {
     nextStepTitle: "Who did you book an appointment with?",
     notifyButton: "Notify",
     searchPlaceholder: "Start typing a name...",
+    noBookedAppointment: "No booked appointment",
   },
   sv: {
     landingTitle: "Digital Receptionist",
@@ -42,5 +43,6 @@ export const textContent: { [key: string]: any } = {
     nextStepTitle: "Vem har du bokat tid med?",
     notifyButton: "Meddela",
     searchPlaceholder: "Börja skriva ett namn...",
+    noBookedAppointment: "Ingen bokad tid",
   },
 };

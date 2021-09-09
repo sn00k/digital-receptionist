@@ -27,7 +27,7 @@ export async function getServerSideProps() {
   };
 }
 
-type IFormInputTypes = {
+type FormInputTypes = {
   firstName: string;
   lastName: string;
   email: string;
@@ -41,13 +41,14 @@ export default function Home({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInputTypes>({ mode: "onBlur" });
+  } = useForm<FormInputTypes>({ mode: "onBlur" });
   const { locale, locales, defaultLocale, asPath } = useRouter();
   const employeeObjs = employees.map((e) => JSON.parse(e) as Employee);
   const [start, setStart] = useState(false);
   const [contactInfo, setContactInfo] = useState({});
   const [nextStep, setNextStep] = useState(false);
-  const [showNotifyBtn, setShowNotifyBtn] = useState(false);
+  const [enableNotifyBtn, setEnableNotifyBtn] = useState(false);
+  const [notifyTo, setNotifyTo] = useState({});
 
   if (!locale) {
     return null;
@@ -61,9 +62,10 @@ export default function Home({
     nextStepTitle,
     notifyButton,
     searchPlaceholder,
+    noBookedAppointment,
   } = textContent[locale];
 
-  const onSubmit: SubmitHandler<IFormInputTypes> = (data) => {
+  const onSubmit: SubmitHandler<FormInputTypes> = (data) => {
     const { firstName, lastName, email, company } = data;
     setContactInfo({
       firstName,
@@ -74,11 +76,19 @@ export default function Home({
     setNextStep(true);
   };
 
+  const handleCheckbox = ({ target }: { target: any }) => {
+    setEnableNotifyBtn(target.checked);
+  };
+
+  const handleNotifyAppointment = () => {
+    //
+  };
+
   const handleOnSearch = (input: string, results: object[]) => {
     // onSearch will have as the first callback parameter
     // the string searched and for the second the results.
     console.log(input, results);
-    setShowNotifyBtn(false);
+    setEnableNotifyBtn(false);
   };
 
   const handleOnHover = (result: object) => {
@@ -89,9 +99,9 @@ export default function Home({
 
   const handleOnSelect = (item: object) => {
     // the item selected
-    console.log("Selected");
-    console.log(item);
-    setShowNotifyBtn(true);
+    console.log("Selected: ", item);
+    setNotifyTo(item);
+    setEnableNotifyBtn(true);
   };
 
   const handleOnFocus = () => {
@@ -152,7 +162,8 @@ export default function Home({
               <h3>{form.title}</h3>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormInput
-                  inputType="firstName"
+                  inputName="firstName"
+                  inputType="text"
                   locale={locale}
                   register={register}
                   errors={errors}
@@ -163,7 +174,8 @@ export default function Home({
                   }}
                 />
                 <FormInput
-                  inputType="lastName"
+                  inputName="lastName"
+                  inputType="text"
                   locale={locale}
                   register={register}
                   errors={errors}
@@ -174,6 +186,7 @@ export default function Home({
                   }}
                 />
                 <FormInput
+                  inputName="email"
                   inputType="email"
                   locale={locale}
                   register={register}
@@ -186,7 +199,8 @@ export default function Home({
                   }}
                 />
                 <FormInput
-                  inputType="company"
+                  inputName="company"
+                  inputType="text"
                   locale={locale}
                   register={register}
                   errors={errors}
@@ -223,12 +237,24 @@ export default function Home({
                 onHover={handleOnHover}
                 onSelect={handleOnSelect}
                 onFocus={handleOnFocus}
-                onClear={() => setShowNotifyBtn(false)}
+                onClear={() => setEnableNotifyBtn(false)}
                 maxResults={3}
                 inputDebounce={500}
                 placeholder={searchPlaceholder}
               />
-              <button disabled={!showNotifyBtn}>{notifyButton}</button>
+              <div className={styles["no-appointment-container"]}>
+                <FormInput
+                  inputName="office-admin"
+                  inputType="checkbox"
+                  locale={locale}
+                  register={register}
+                  onClick={handleCheckbox}
+                />
+                <label htmlFor="office-admin">
+                  <i>{noBookedAppointment}</i>
+                </label>
+              </div>
+              <button disabled={!enableNotifyBtn}>{notifyButton}</button>
             </>
           )}
         </Card>

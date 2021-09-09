@@ -61,3 +61,11 @@
   margin: 1rem auto;
   width: 100%;
 }
+
+.container .no-appointment-container {
+  margin: 1rem 0;
+}
+
+.container .no-appointment-container i {
+  font-weight: 700;
+}
