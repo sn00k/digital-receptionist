@@ -1,36 +1,41 @@
-import React from "react";
+import React, { InputHTMLAttributes } from "react";
 import styles from "../styles/FormInput.module.css";
 import { textContent } from "../utils/sv_us";
 
-type IFormInput = {
+interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
+  inputName: string;
   inputType: string;
   locale: string;
   register: Function;
-  errors: { [key: string]: string | any };
-  validation: object;
-};
+  errors?: { [key: string]: string | any };
+  validation?: object;
+  attrs?: any;
+}
 
-const FormInput = ({
+const FormInput: React.FC<IFormInput> = ({
+  inputName,
   inputType,
   locale,
   register,
   errors,
   validation,
-}: IFormInput) => {
+  ...attrs
+}) => {
   const { form } = textContent[locale];
 
   return (
     <>
       <input
-        {...register(inputType, {
+        {...register(inputName, {
           ...validation,
         })}
-        type="text"
-        placeholder={form[inputType]}
+        type={inputType}
+        placeholder={form[inputName]}
+        {...attrs}
       />
-      {errors[inputType] && (
+      {errors && errors[inputName] && (
         <span className={styles.error}>
-          {`${form[inputType]} ${form.validation[errors[inputType].type]}
+          {`${form[inputName]} ${form.validation[errors[inputName].type]}
           `}
         </span>
       )}
