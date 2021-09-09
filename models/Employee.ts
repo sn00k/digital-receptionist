@@ -10,4 +10,7 @@ export class Employee {
 
   @Column({ length: 128, nullable: false })
   email: string;
+
+  @Column({ default: false })
+  office_admin: boolean;
 }
