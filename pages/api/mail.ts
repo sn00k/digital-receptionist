@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Employee } from "../../models/Employee";
+import { Visitor } from "../../models/Visitor";
+import { getOrCreateConnection } from "../../utils/db";
 const mail = require("@sendgrid/mail");
 
 mail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -29,10 +31,25 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     await mail.send(data);
+
+    // OK
+    const conn = await getOrCreateConnection();
+    const dbRes = await conn
+      .createQueryBuilder()
+      .insert()
+      .into<Visitor>("visitor")
+      .values([
+        {
+          name: `${visitor.firstName} ${visitor.lastName}`,
+          email: visitor.email,
+          company: visitor.company,
+        },
+      ])
+      .execute();
+
     res.status(200).json({ status: "OK", message: "Email has been sent!" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ status: "ERROR", message: "Error sending email", error });
+    console.log("error: ", error);
+    res.status(500).json({ status: "ERROR", message: "Error sending email" });
   }
 };

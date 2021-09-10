@@ -1,4 +1,5 @@
 import { Employee } from "../models/Employee";
+import { Visitor } from "../models/Visitor";
 import { getConnection, createConnection } from "typeorm";
 
 export async function getOrCreateConnection() {
@@ -13,7 +14,7 @@ export async function getOrCreateConnection() {
       username: process.env.POSTGRES_USER as string,
       password: process.env.POSTGRES_PASSWORD as string,
       database: process.env.POSTGRES_DB as string,
-      entities: [Employee],
+      entities: [Employee, Visitor],
       synchronize: true,
       logging: false,
     });
