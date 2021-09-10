@@ -86,15 +86,22 @@ export default function Home({
     }
   };
 
-  // DEBUG
-  useEffect(() => {
-    console.log("NOTIFY TO: ", notifyTo);
-  }, [notifyTo]);
+  const handleNotifyAppointment = async () => {
+    if (notifyTo.length) {
+      try {
+        await fetch("/api/mail", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            visitor: contactInfo,
+            notifyEmployees: notifyTo,
+          }),
+        });
 
-  const handleNotifyAppointment = () => {
-    if (notifyTo && Object.keys(notifyTo) && notifyTo.constructor === Object) {
-      // notifyTo is not empty
-      console.log("notifyTo: ", notifyTo);
+        // TODO: ADD ALERT FOR SUCCESS
+      } catch (error) {
+        // TODO: HANDLE ERROR
+      }
     }
   };
 
@@ -104,7 +111,6 @@ export default function Home({
   };
 
   const formatResult = (item: string) => {
-    console.log("item: ", item);
     return (
       <p
         dangerouslySetInnerHTML={{
