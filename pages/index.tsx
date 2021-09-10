@@ -1,6 +1,6 @@
 import type { InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
@@ -48,7 +48,7 @@ export default function Home({
   const [contactInfo, setContactInfo] = useState({});
   const [nextStep, setNextStep] = useState(false);
   const [enableNotifyBtn, setEnableNotifyBtn] = useState(false);
-  const [notifyTo, setNotifyTo] = useState({});
+  const [notifyTo, setNotifyTo] = useState<Employee[]>([]);
 
   if (!locale) {
     return null;
@@ -76,36 +76,31 @@ export default function Home({
     setNextStep(true);
   };
 
-  const handleCheckbox = ({ target }: { target: any }) => {
+  const handleCheckbox = ({ target }: { target: HTMLInputElement }) => {
     setEnableNotifyBtn(target.checked);
+    if (target.checked) {
+      const officeAdmins = employeeObjs.filter((e) => e.office_admin);
+      setNotifyTo(officeAdmins);
+    } else {
+      setNotifyTo([]);
+    }
   };
+
+  // DEBUG
+  useEffect(() => {
+    console.log("NOTIFY TO: ", notifyTo);
+  }, [notifyTo]);
 
   const handleNotifyAppointment = () => {
-    //
+    if (notifyTo && Object.keys(notifyTo) && notifyTo.constructor === Object) {
+      // notifyTo is not empty
+      console.log("notifyTo: ", notifyTo);
+    }
   };
 
-  const handleOnSearch = (input: string, results: object[]) => {
-    // onSearch will have as the first callback parameter
-    // the string searched and for the second the results.
-    console.log(input, results);
-    setEnableNotifyBtn(false);
-  };
-
-  const handleOnHover = (result: object) => {
-    // the item hovered
-    console.log("Hovered");
-    console.log(result);
-  };
-
-  const handleOnSelect = (item: object) => {
-    // the item selected
-    console.log("Selected: ", item);
-    setNotifyTo(item);
+  const handleOnSelect = (item: Employee) => {
+    setNotifyTo([item]);
     setEnableNotifyBtn(true);
-  };
-
-  const handleOnFocus = () => {
-    console.log("Focused");
   };
 
   const formatResult = (item: string) => {
@@ -231,12 +226,10 @@ export default function Home({
               <h2>{nextStepTitle}</h2>
               <ReactSearchAutocomplete
                 items={employeeObjs}
-                onSearch={handleOnSearch}
+                onSearch={() => setEnableNotifyBtn(false)}
                 autoFocus
                 formatResult={formatResult}
-                onHover={handleOnHover}
                 onSelect={handleOnSelect}
-                onFocus={handleOnFocus}
                 onClear={() => setEnableNotifyBtn(false)}
                 maxResults={3}
                 inputDebounce={500}
@@ -254,7 +247,12 @@ export default function Home({
                   <i>{noBookedAppointment}</i>
                 </label>
               </div>
-              <button disabled={!enableNotifyBtn}>{notifyButton}</button>
+              <button
+                disabled={!enableNotifyBtn}
+                onClick={handleNotifyAppointment}
+              >
+                {notifyButton}
+              </button>
             </>
           )}
         </Card>
