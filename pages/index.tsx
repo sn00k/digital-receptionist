@@ -78,12 +78,9 @@ export default function Home({
 
   const handleCheckbox = ({ target }: { target: HTMLInputElement }) => {
     setEnableNotifyBtn(target.checked);
-    if (target.checked) {
-      const officeAdmins = employeeObjs.filter((e) => e.office_admin);
-      setNotifyTo(officeAdmins);
-    } else {
-      setNotifyTo([]);
-    }
+    setNotifyTo(
+      target.checked ? employeeObjs.filter((e) => e.office_admin) : []
+    );
   };
 
   const handleNotifyAppointment = async () => {
