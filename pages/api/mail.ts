@@ -23,7 +23,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const data = {
     to,
-    from: process.env.SENDGRID_EMAIL_FROM,
+    from: {
+      name: process.env.SENDGRID_EMAIL_SENDER_NAME,
+      email: process.env.SENDGRID_EMAIL_SENDER_EMAIL,
+    },
     subject: process.env.SENDGRID_EMAIL_SUBJECT,
     text: message,
     html: message.replace(/\r\n/g, "<br />"),
