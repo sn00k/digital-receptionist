@@ -12,7 +12,7 @@ import { textContent } from "../utils/sv_us";
 import FormInput from "../components/FormInput";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { getOrCreateConnection } from "../utils/db";
-import { Employee } from "../models/Employee";
+import { Employee } from "../entities/Employee";
 
 export async function getServerSideProps() {
   const conn = await getOrCreateConnection();

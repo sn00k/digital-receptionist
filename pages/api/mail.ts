@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Employee } from "../../models/Employee";
-import { Visitor } from "../../models/Visitor";
+import { Employee } from "../../entities/Employee";
+import { Visitor } from "../../entities/Visitor";
 import { getOrCreateConnection } from "../../utils/db";
 const mail = require("@sendgrid/mail");
 

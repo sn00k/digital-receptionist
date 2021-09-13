@@ -1,5 +1,5 @@
-import { Employee } from "../models/Employee";
-import { Visitor } from "../models/Visitor";
+import { Employee } from "../entities/Employee";
+import { Visitor } from "../entities/Visitor";
 import { getConnection, createConnection } from "typeorm";
 
 export async function getOrCreateConnection() {
