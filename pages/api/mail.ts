@@ -53,6 +53,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(200).json({ status: "OK", message: "Email has been sent!" });
   } catch (error) {
     console.log("error: ", error);
+    if (error.response) {
+      console.error(error.response.body);
+    }
+
     res.status(500).json({ status: "ERROR", message: "Error sending email" });
   }
 };
