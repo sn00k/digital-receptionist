@@ -13,6 +13,9 @@ import FormInput from "../components/FormInput";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { getOrCreateConnection } from "../utils/db";
 import { Employee } from "../entities/Employee";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export async function getServerSideProps() {
   const conn = await getOrCreateConnection();
@@ -42,18 +45,23 @@ export default function Home({
     handleSubmit,
     formState: { errors },
   } = useForm<FormInputTypes>({ mode: "onBlur" });
-  const { locale, locales, defaultLocale, asPath } = useRouter();
+  const router = useRouter();
+  const { locale, locales, defaultLocale, asPath } = router;
   const employeeObjs = employees.map((e) => JSON.parse(e) as Employee);
   const [start, setStart] = useState(false);
   const [contactInfo, setContactInfo] = useState({});
   const [nextStep, setNextStep] = useState(false);
   const [enableNotifyBtn, setEnableNotifyBtn] = useState(false);
   const [notifyTo, setNotifyTo] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const swal = withReactContent(Swal);
 
   if (!locale) {
     return null;
   }
 
+  // i18n
   const {
     landingTitle,
     greeting,
@@ -63,6 +71,9 @@ export default function Home({
     notifyButton,
     searchPlaceholder,
     noBookedAppointment,
+    alertTitle,
+    alertBody,
+    alertClosing,
   } = textContent[locale];
 
   const onSubmit: SubmitHandler<FormInputTypes> = (data) => {
@@ -85,6 +96,7 @@ export default function Home({
 
   const handleNotifyAppointment = async () => {
     if (notifyTo.length) {
+      setLoading(true);
       try {
         await fetch("/api/mail", {
           method: "POST",
@@ -95,11 +107,37 @@ export default function Home({
           }),
         });
 
-        // TODO: ADD ALERT FOR SUCCESS
+        let timerInterval: number;
+        const tenSeconds: number = 10000;
+        swal
+          .fire({
+            title: alertTitle,
+            html: alertBody + alertClosing,
+            timer: tenSeconds,
+            timerProgressBar: true,
+            didOpen: () => {
+              swal.showLoading();
+              const b = swal.getHtmlContainer()?.querySelector("b");
+
+              timerInterval = window.setInterval(() => {
+                // @ts-ignore: Object is (not) possibly undefined
+                b.textContent = (swal.getTimerLeft() / 1000).toFixed();
+              }, 100);
+            },
+            willClose: () => {
+              clearInterval(timerInterval);
+            },
+          })
+          .then((result) => {
+            if (result.dismiss === swal.DismissReason.timer) {
+              router.reload();
+            }
+          });
       } catch (error) {
-        // TODO: HANDLE ERROR
+        console.error("Sweet alert 2 error: ", error);
       }
     }
+    setLoading(false);
   };
 
   const handleOnSelect = (item: Employee) => {
@@ -110,8 +148,9 @@ export default function Home({
   const formatResult = (item: string) => {
     return (
       <p
+        className={styles["search-result"]}
         dangerouslySetInnerHTML={{
-          __html: '<strong className="search-result">' + item + "</strong>",
+          __html: '<strong">' + item + "</strong>",
         }}
       ></p>
     );
@@ -121,11 +160,6 @@ export default function Home({
     <>
       <Head>
         <title>{landingTitle}</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,100&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <div className={styles.container}>
         <Card>
@@ -251,10 +285,14 @@ export default function Home({
                 </label>
               </div>
               <button
-                disabled={!enableNotifyBtn}
+                disabled={!enableNotifyBtn || loading}
                 onClick={handleNotifyAppointment}
               >
-                {notifyButton}
+                {loading ? (
+                  <ClipLoader color="#12ABDB" loading={loading} size={32} />
+                ) : (
+                  notifyButton
+                )}
               </button>
             </>
           )}

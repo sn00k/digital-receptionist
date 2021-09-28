@@ -21,6 +21,10 @@ export const textContent: { [key: string]: any } = {
     notifyButton: "Notify",
     searchPlaceholder: "Start typing a name...",
     noBookedAppointment: "No booked appointment",
+    alertTitle: "Notification sent!",
+    alertBody: "<p>We will be with you shortly, please wait in the lobby.</p>",
+    alertClosing:
+      "<strong>This message will automatically close in <b></b></strong>",
   },
   sv: {
     landingTitle: "Digital Receptionist",
@@ -44,5 +48,9 @@ export const textContent: { [key: string]: any } = {
     notifyButton: "Meddela",
     searchPlaceholder: "Börja skriva ett namn...",
     noBookedAppointment: "Ingen bokad tid",
+    alertTitle: "Meddelande skickat!",
+    alertBody: "Vi kommer snart och möter dig, vänligen vänta i lobbyn.<br />",
+    alertClosing:
+      "<strong>Detta meddelande stängs automatiskt om <b></b></strong>",
   },
 };
