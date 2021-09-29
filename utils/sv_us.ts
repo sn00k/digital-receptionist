@@ -24,7 +24,7 @@ export const textContent: { [key: string]: any } = {
     alertTitle: "Notification sent!",
     alertBody: "<p>We will be with you shortly, please wait in the lobby.</p>",
     alertClosing:
-      "<strong>This message will automatically close in <b></b></strong>",
+      "<strong>This window will automatically close in <b></b></strong>",
   },
   sv: {
     landingTitle: "Digital Receptionist",
@@ -51,6 +51,6 @@ export const textContent: { [key: string]: any } = {
     alertTitle: "Meddelande skickat!",
     alertBody: "Vi kommer snart och möter dig, vänligen vänta i lobbyn.<br />",
     alertClosing:
-      "<strong>Detta meddelande stängs automatiskt om <b></b></strong>",
+      "<strong>Detta fönster stängs automatiskt om <b></b></strong>",
   },
 };
