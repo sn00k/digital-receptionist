@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,100&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300,400,500,700;1,100&display=swap"
           rel="stylesheet"
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />

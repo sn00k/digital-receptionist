@@ -67,7 +67,11 @@
 }
 
 .container .no-appointment-container i {
-  font-weight: 700;
+  font-weight: 500;
+}
+
+.container .gdpr {
+  font-weight: 400;
 }
 
 @media (max-width: 1024px) {
