@@ -65,6 +65,7 @@ export default function Home({
   const {
     landingTitle,
     greeting,
+    gdpr,
     startButton,
     form,
     nextStepTitle,
@@ -250,6 +251,9 @@ export default function Home({
           {!start && !nextStep && (
             <>
               <h2>{greeting}</h2>
+              <p>
+                <i className={styles.gdpr}>{gdpr}</i>
+              </p>
               <button
                 className={styles.btnStart}
                 onClick={() => setStart(true)}

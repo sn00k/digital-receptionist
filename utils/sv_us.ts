@@ -2,6 +2,7 @@ export const textContent: { [key: string]: any } = {
   en: {
     landingTitle: "Digital Receptionist",
     greeting: "Hi, welcome to the digital receptionist!",
+    gdpr: "By using this application you give your full consent to Capgemini to store information about your meeting with us such as your name, email address, date and possibly company name in accordance with data protection laws and regulations.",
     startButton: "Start",
     form: {
       title: "Please enter your information below",
@@ -29,6 +30,7 @@ export const textContent: { [key: string]: any } = {
   sv: {
     landingTitle: "Digital Receptionist",
     greeting: "Hej, välkommen till den digitala receptionisten!",
+    gdpr: "Genom att använda denna applikation ger du ditt fulla samtycke till Capgemini att lagra information om ditt möte med oss så som ditt namn, e-postadress, datum och eventuellt företagsnamn i enlighet med dataskyddslagar och -förordningar.",
     startButton: "Starta",
     form: {
       title: "Vänligen fyll i dina uppgifter nedan",
