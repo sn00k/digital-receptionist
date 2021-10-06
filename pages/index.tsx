@@ -15,7 +15,7 @@ import { getOrCreateConnection } from "../utils/db";
 import { Employee } from "../entities/Employee";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import ClipLoader from "react-spinners/ClipLoader";
+import { Loader } from "../components/Loader";
 
 export async function getServerSideProps() {
   const conn = await getOrCreateConnection();
@@ -43,8 +43,8 @@ export default function Home({
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormInputTypes>({ mode: "onBlur" });
+    formState: { errors, isValid, isDirty },
+  } = useForm<FormInputTypes>({ mode: "all" });
   const router = useRouter();
   const { locale, locales, defaultLocale, asPath } = router;
   const employeeObjs = employees.map((e) => JSON.parse(e) as Employee);
@@ -242,7 +242,11 @@ export default function Home({
                     maxLength: 70,
                   }}
                 />
-                <button className={styles.formButton} type="submit">
+                <button
+                  className={styles.formButton}
+                  type="submit"
+                  disabled={!isDirty || (isDirty && !isValid)}
+                >
                   {form.nextStep}
                 </button>
               </form>
@@ -292,11 +296,8 @@ export default function Home({
                 disabled={!enableNotifyBtn || loading}
                 onClick={handleNotifyAppointment}
               >
-                {loading ? (
-                  <ClipLoader color="#12ABDB" loading={loading} size={32} />
-                ) : (
-                  notifyButton
-                )}
+                <Loader show={loading} />
+                {!loading && notifyButton}
               </button>
             </>
           )}
