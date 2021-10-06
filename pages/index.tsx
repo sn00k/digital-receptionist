@@ -16,6 +16,8 @@ import { Employee } from "../entities/Employee";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Loader } from "../components/Loader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUndoAlt } from "@fortawesome/free-solid-svg-icons";
 
 export async function getServerSideProps() {
   const conn = await getOrCreateConnection();
@@ -164,6 +166,14 @@ export default function Home({
       </Head>
       <div className={styles.container}>
         <Card>
+          <div className={styles.restart}>
+            <FontAwesomeIcon
+              icon={faUndoAlt}
+              size="1x"
+              width="32"
+              onClick={() => router.reload()}
+            />
+          </div>
           <Logo />
           <div className={styles.flags}>
             <Link passHref href={asPath} locale="en">

@@ -7,6 +7,14 @@
   background-color: var(--capgemini-color--primary);
 }
 
+.container .restart {
+  display: flex;
+}
+
+.container .restart svg {
+  cursor: pointer;
+}
+
 .container .flags {
   display: flex;
   justify-content: center;
