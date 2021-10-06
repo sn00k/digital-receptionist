@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-const Logo: React.FC = () => {
+export const Logo: React.FC = () => {
   return (
     <Image
       src="/capgemini_logo.png"
@@ -13,5 +13,3 @@ const Logo: React.FC = () => {
     />
   );
 };
-
-export default Logo;

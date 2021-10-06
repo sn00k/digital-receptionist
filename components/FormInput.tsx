@@ -12,7 +12,7 @@ interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
   attrs?: any;
 }
 
-const FormInput: React.FC<IFormInput> = ({
+export const FormInput: React.FC<IFormInput> = ({
   inputName,
   inputType,
   locale,
@@ -42,5 +42,3 @@ const FormInput: React.FC<IFormInput> = ({
     </>
   );
 };
-
-export default FormInput;
