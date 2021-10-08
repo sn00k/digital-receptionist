@@ -9,6 +9,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import { Logo } from "../components/Logo";
 import { textContent } from "../utils/sv_us";
+import { Form } from "../components/Form";
 import { FormInput } from "../components/FormInput";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { getOrCreateConnection } from "../utils/db";
@@ -18,6 +19,7 @@ import withReactContent from "sweetalert2-react-content";
 import { Loader } from "../components/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUndoAlt } from "@fortawesome/free-solid-svg-icons";
+import { FormInputTypes } from "../types/FormInput";
 
 export async function getServerSideProps() {
   const conn = await getOrCreateConnection();
@@ -32,24 +34,12 @@ export async function getServerSideProps() {
   };
 }
 
-type FormInputTypes = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  company: string;
-};
-
 export default function Home({
   employees,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid, isDirty },
-  } = useForm<FormInputTypes>({ mode: "all" });
+  // hooks
+  const { register } = useForm<FormInputTypes>();
   const router = useRouter();
-  const { locale, locales, defaultLocale, asPath } = router;
-  const employeeObjs = employees.map((e) => JSON.parse(e) as Employee);
   const [start, setStart] = useState(false);
   const [contactInfo, setContactInfo] = useState({});
   const [nextStep, setNextStep] = useState(false);
@@ -57,6 +47,8 @@ export default function Home({
   const [notifyTo, setNotifyTo] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const { locale, asPath } = router;
+  const employeeObjs = employees.map((e) => JSON.parse(e) as Employee);
   const swal = withReactContent(Swal);
 
   if (!locale) {
@@ -79,21 +71,24 @@ export default function Home({
     alertClosing,
   } = textContent[locale];
 
-  const onSubmit: SubmitHandler<FormInputTypes> = (data) => {
-    const { firstName, lastName, email, company } = data;
-    setContactInfo({
-      firstName,
-      lastName,
-      email,
-      company,
-    });
-    setNextStep(true);
+  const formatResult = (item: string) => {
+    return (
+      <p
+        className={styles["search-result"]}
+        dangerouslySetInnerHTML={{
+          __html: '<strong">' + item + "</strong>",
+        }}
+      ></p>
+    );
   };
 
-  const handleCheckbox = ({ target }: { target: HTMLInputElement }) => {
-    setEnableNotifyBtn(target.checked);
+  // event handlers
+  const handleCheckbox = (event: React.MouseEvent<HTMLInputElement>) => {
+    const checkbox = event.currentTarget as HTMLInputElement;
+    console.log({ checkbox });
+    setEnableNotifyBtn(checkbox.checked);
     setNotifyTo(
-      target.checked ? employeeObjs.filter((e) => e.office_admin) : []
+      checkbox.checked ? employeeObjs.filter((e) => e.office_admin) : []
     );
   };
 
@@ -148,15 +143,15 @@ export default function Home({
     setEnableNotifyBtn(true);
   };
 
-  const formatResult = (item: string) => {
-    return (
-      <p
-        className={styles["search-result"]}
-        dangerouslySetInnerHTML={{
-          __html: '<strong">' + item + "</strong>",
-        }}
-      ></p>
-    );
+  const onSubmit: SubmitHandler<FormInputTypes> = (data) => {
+    const { firstName, lastName, email, company } = data;
+    setContactInfo({
+      firstName,
+      lastName,
+      email,
+      company,
+    });
+    setNextStep(true);
   };
 
   return (
@@ -203,63 +198,7 @@ export default function Home({
           {start && !nextStep && (
             <>
               <h3>{form.title}</h3>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <FormInput
-                  inputName="firstName"
-                  inputType="text"
-                  locale={locale}
-                  register={register}
-                  errors={errors}
-                  validation={{
-                    required: true,
-                    minLength: 2,
-                    maxLength: 50,
-                  }}
-                />
-                <FormInput
-                  inputName="lastName"
-                  inputType="text"
-                  locale={locale}
-                  register={register}
-                  errors={errors}
-                  validation={{
-                    required: true,
-                    minLength: 2,
-                    maxLength: 50,
-                  }}
-                />
-                <FormInput
-                  inputName="email"
-                  inputType="email"
-                  locale={locale}
-                  register={register}
-                  errors={errors}
-                  validation={{
-                    required: true,
-                    minLength: 6,
-                    maxLength: 70,
-                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  }}
-                />
-                <FormInput
-                  inputName="company"
-                  inputType="text"
-                  locale={locale}
-                  register={register}
-                  errors={errors}
-                  validation={{
-                    minLength: 2,
-                    maxLength: 70,
-                  }}
-                />
-                <button
-                  className={styles.formButton}
-                  type="submit"
-                  disabled={!isDirty || (isDirty && !isValid)}
-                >
-                  {form.nextStep}
-                </button>
-              </form>
+              <Form callback={onSubmit} locale={locale} />
             </>
           )}
           {!start && !nextStep && (
